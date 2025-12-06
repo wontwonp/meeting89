@@ -1,0 +1,97 @@
+.settings-section {
+  margin-bottom: 24px;
+}
+
+.settings-section .section-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #ffffff;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #ffffff;
+}
+
+.card-description {
+  font-size: 14px;
+  color: #cccccc;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.danger-card {
+  border: 2px solid #e74c3c;
+}
+
+.info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.info-item {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #cccccc;
+}
+
+.info-item strong {
+  color: #ffffff;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.input-hint {
+  font-size: 12px;
+  color: #888;
+  margin-top: 4px;
+}
+
+.carry-over-suggestion {
+  background: #2a2a2a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.suggestion-text {
+  font-size: 14px;
+  color: #cccccc;
+  margin-bottom: 8px;
+}
+
+.suggestion-text strong {
+  color: #4A90E2;
+  font-size: 16px;
+}
+
+.carry-over-history {
+  margin-top: 16px;
+  padding: 12px;
+  background: #2a2a2a;
+  border-radius: 8px;
+  border: 1px solid #333;
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #333;
+  font-size: 14px;
+  color: #cccccc;
+}
+
+.history-item:last-child {
+  border-bottom: none;
+}
+
+.history-item strong {
+  color: #4A90E2;
+}
+

@@ -1,0 +1,165 @@
+.summary-content {
+  background: #1a1a1a;
+  border-radius: 12px;
+  padding: 24px;
+  margin-top: 16px;
+  border: 1px solid #333;
+}
+
+.summary-header {
+  text-align: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #333;
+}
+
+.summary-header h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #ffffff;
+}
+
+.summary-date {
+  font-size: 14px;
+  color: #888;
+}
+
+.summary-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.summary-stat-card {
+  background: #2a2a2a;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  border: 1px solid #333;
+}
+
+.summary-stat-card .stat-label {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 8px;
+}
+
+.stat-value-large {
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.stat-value-large.positive {
+  color: #27ae60;
+}
+
+.stat-value-large.negative {
+  color: #e74c3c;
+}
+
+.stat-subtext-small {
+  font-size: 11px;
+  color: #888;
+  margin-top: 4px;
+}
+
+.summary-section {
+  margin-bottom: 32px;
+}
+
+.summary-section .section-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #ffffff;
+}
+
+.member-stats-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.member-stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: #2a2a2a;
+  border-radius: 8px;
+  border: 1px solid #333;
+}
+
+.member-stat-name {
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.member-stat-amount {
+  font-weight: 600;
+  color: #27ae60;
+}
+
+.recent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.recent-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: #2a2a2a;
+  border-radius: 8px;
+  border: 1px solid #333;
+}
+
+.recent-item-name {
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: #ffffff;
+}
+
+.recent-item-date {
+  font-size: 12px;
+  color: #888;
+}
+
+.recent-item-amount {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.recent-item-amount.positive {
+  color: #27ae60;
+}
+
+.recent-item-amount.negative {
+  color: #e74c3c;
+}
+
+.empty-text {
+  text-align: center;
+  color: #888;
+  padding: 20px;
+}
+
+@media print {
+  .page-header,
+  .btn,
+  .bottom-nav {
+    display: none;
+  }
+  
+  .summary-content {
+    box-shadow: none;
+    background: white;
+    color: #000;
+  }
+}
+

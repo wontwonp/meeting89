@@ -1,0 +1,44 @@
+.members-list {
+  margin-top: 16px;
+}
+
+.member-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.member-info {
+  flex: 1;
+}
+
+.member-name {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #ffffff;
+}
+
+.member-phone {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.member-note {
+  font-size: 13px;
+  color: #888;
+  margin-top: 4px;
+}
+
+.member-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.member-actions .btn {
+  padding: 8px 16px;
+  font-size: 14px;
+}
+

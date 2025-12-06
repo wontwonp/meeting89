@@ -1,0 +1,44 @@
+.rules-list {
+  margin-top: 16px;
+}
+
+.rule-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.rule-info {
+  flex: 1;
+}
+
+.rule-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #ffffff;
+}
+
+.rule-content {
+  font-size: 14px;
+  color: #cccccc;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  margin-bottom: 8px;
+}
+
+.rule-date {
+  font-size: 12px;
+  color: #888;
+}
+
+.rule-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.rule-actions .btn {
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
