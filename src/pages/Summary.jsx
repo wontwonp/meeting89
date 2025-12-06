@@ -4,8 +4,15 @@ import html2canvas from 'html2canvas'
 import KakaoShareModal from '../components/KakaoShareModal'
 import './Summary.css'
 
+const EVENT_TYPES = [
+  { value: 'wedding', label: '결혼' },
+  { value: 'dol', label: '자녀 돌 1회' },
+  { value: 'grandparent', label: '조부모님상' },
+  { value: 'parent', label: '부모님상' }
+]
+
 export default function Summary() {
-  const { members, deposits, expenses, settings, getCurrentYearCarryOver } = useData()
+  const { members, deposits, expenses, settings, getCurrentYearCarryOver, events } = useData()
   const [isCapturing, setIsCapturing] = useState(false)
   const [showKakaoModal, setShowKakaoModal] = useState(false)
   const [capturedImage, setCapturedImage] = useState(null)
@@ -58,6 +65,22 @@ export default function Summary() {
       totalDeposits: memberDeposits
     }
   }).sort((a, b) => b.totalDeposits - a.totalDeposits)
+
+  // 경조사 통계 계산
+  const eventStats = EVENT_TYPES.map(type => {
+    const typeEvents = events.filter(e => e.eventType === type.value)
+    const totalAmount = typeEvents.reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0)
+    const paidCount = typeEvents.length
+    const unpaidCount = members.length - paidCount
+    return {
+      type: type.value,
+      label: type.label,
+      totalAmount,
+      paidCount,
+      unpaidCount,
+      totalMembers: members.length
+    }
+  })
 
   const handleScreenshot = async () => {
     setIsCapturing(true)
@@ -221,6 +244,30 @@ export default function Summary() {
             </div>
           ) : (
             <p className="empty-text">지출 내역이 없습니다</p>
+          )}
+        </div>
+
+        <div className="summary-section">
+          <h3 className="section-title">전체 경조사 통계</h3>
+          {eventStats.length > 0 ? (
+            <div className="events-summary-table">
+              <div className="events-summary-header">
+                <div className="events-summary-cell">경조사 유형</div>
+                <div className="events-summary-cell">총 지급액</div>
+                <div className="events-summary-cell">지급 완료</div>
+                <div className="events-summary-cell">미지급</div>
+              </div>
+              {eventStats.map(stat => (
+                <div key={stat.type} className="events-summary-row">
+                  <div className="events-summary-cell events-summary-type">{stat.label}</div>
+                  <div className="events-summary-cell events-summary-amount">{stat.totalAmount.toLocaleString()}원</div>
+                  <div className="events-summary-cell events-summary-count positive">{stat.paidCount}명</div>
+                  <div className="events-summary-cell events-summary-count negative">{stat.unpaidCount}명</div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="empty-text">경조사 내역이 없습니다</p>
           )}
         </div>
       </div>
