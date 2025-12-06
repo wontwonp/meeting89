@@ -1,11 +1,14 @@
 import { useData } from '../context/DataContext'
 import { useState } from 'react'
 import html2canvas from 'html2canvas'
+import KakaoShareModal from '../components/KakaoShareModal'
 import './Summary.css'
 
 export default function Summary() {
   const { members, deposits, expenses, settings, getCurrentYearCarryOver } = useData()
   const [isCapturing, setIsCapturing] = useState(false)
+  const [showKakaoModal, setShowKakaoModal] = useState(false)
+  const [capturedImage, setCapturedImage] = useState(null)
 
   const totalDeposits = deposits.reduce((sum, d) => sum + (parseFloat(d.amount) || 0), 0)
   const totalExpenses = expenses.reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0)
@@ -38,7 +41,7 @@ export default function Summary() {
           const fileName = `계모임-요약-${new Date().toISOString().split('T')[0]}.png`
           const file = new File([blob], fileName, { type: 'image/png' })
           
-          // Web Share API로 바로 공유 시도 (모바일에서 카카오톡 등으로 공유 가능)
+          // 모바일에서 Web Share API 사용 (카카오톡 선택 가능)
           if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
             try {
               await navigator.share({
@@ -46,44 +49,36 @@ export default function Summary() {
                 text: `${settings.clubName || '계모임'} 요약 정보입니다.`,
                 files: [file]
               })
-              // 공유 성공
+              setIsCapturing(false)
               return
             } catch (shareError) {
-              // 사용자가 공유를 취소했거나 실패한 경우
-              if (shareError.name !== 'AbortError') {
-                console.error('공유 실패:', shareError)
+              if (shareError.name === 'AbortError') {
+                setIsCapturing(false)
+                return
               }
             }
           }
           
-          // Web Share API가 지원되지 않거나 실패한 경우
-          // 클립보드에 복사 시도
-          try {
-            await navigator.clipboard.write([
-              new ClipboardItem({
-                'image/png': blob
-              })
-            ])
-            alert('이미지가 클립보드에 복사되었습니다.\n카카오톡에서 붙여넣기(Ctrl+V 또는 길게 누르기)로 공유하세요.')
-          } catch (clipboardError) {
-            // 클립보드 복사 실패 시 다운로드
-            const url = URL.createObjectURL(blob)
-            const link = document.createElement('a')
-            link.href = url
-            link.download = fileName
-            document.body.appendChild(link)
-            link.click()
-            document.body.removeChild(link)
-            URL.revokeObjectURL(url)
-            alert('이미지가 다운로드되었습니다.\n다운로드한 이미지를 카카오톡에서 공유하세요.')
-          }
+          // PC 또는 Web Share API가 지원되지 않는 경우
+          // 이미지를 저장하고 모달 표시
+          const imageUrl = URL.createObjectURL(blob)
+          setCapturedImage({ blob, file, imageUrl })
+          setShowKakaoModal(true)
+          setIsCapturing(false)
         }
       }, 'image/png')
     } catch (error) {
       console.error('스크린샷 생성 실패:', error)
       alert('스크린샷 생성에 실패했습니다.')
-    } finally {
       setIsCapturing(false)
+    }
+  }
+  
+  const handleCloseModal = () => {
+    setShowKakaoModal(false)
+    if (capturedImage) {
+      URL.revokeObjectURL(capturedImage.imageUrl)
+      setCapturedImage(null)
     }
   }
 
@@ -197,6 +192,14 @@ export default function Summary() {
           )}
         </div>
       </div>
+
+      {showKakaoModal && capturedImage && (
+        <KakaoShareModal
+          image={capturedImage}
+          clubName={settings.clubName || '계모임'}
+          onClose={handleCloseModal}
+        />
+      )}
     </div>
   )
 }
