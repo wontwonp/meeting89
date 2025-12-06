@@ -147,6 +147,10 @@ export default function Summary() {
             )}
           </div>
           <div className="summary-stat-card">
+            <div className="stat-label">{currentYear}년 멤버 입금</div>
+            <div className="stat-value-large positive">{totalMemberDeposits.toLocaleString()}원</div>
+          </div>
+          <div className="summary-stat-card">
             <div className="stat-label">{currentYear}년 은행이자</div>
             <div className="stat-value-large positive">{totalInterestDeposits.toLocaleString()}원</div>
           </div>
