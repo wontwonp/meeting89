@@ -205,7 +205,7 @@ export default function Settings() {
               <strong>총무 교체:</strong> 데이터 내보내기로 JSON 파일을 생성하고, 다음 총무가 데이터 가져오기로 불러오세요.
             </div>
             <div className="info-item">
-              <strong>스크린샷 공유:</strong> 요약 페이지에서 스크린샷을 저장하여 카카오톡으로 공유할 수 있습니다.
+              <strong>카카오톡 공유:</strong> 요약 페이지에서 스크린샷을 바로 카카오톡으로 공유할 수 있습니다. (모바일에서는 공유 메뉴에서 카카오톡 선택, PC에서는 클립보드 복사 후 붙여넣기)
             </div>
           </div>
         </div>

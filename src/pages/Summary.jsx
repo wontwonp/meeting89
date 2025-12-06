@@ -27,33 +27,55 @@ export default function Summary() {
     try {
       const element = document.getElementById('summary-content')
       const canvas = await html2canvas(element, {
-        backgroundColor: '#f5f5f5',
+        backgroundColor: '#000000',
         scale: 2,
-        logging: false
+        logging: false,
+        useCORS: true
       })
       
-      canvas.toBlob((blob) => {
+      canvas.toBlob(async (blob) => {
         if (blob) {
-          const url = URL.createObjectURL(blob)
-          const link = document.createElement('a')
-          link.href = url
-          link.download = `계모임-요약-${new Date().toISOString().split('T')[0]}.png`
-          document.body.appendChild(link)
-          link.click()
-          document.body.removeChild(link)
-          URL.revokeObjectURL(url)
+          const fileName = `계모임-요약-${new Date().toISOString().split('T')[0]}.png`
+          const file = new File([blob], fileName, { type: 'image/png' })
           
-          // 카카오톡 공유를 위한 안내
-          if (navigator.share) {
-            navigator.share({
-              title: '계모임 요약',
-              text: `${settings.clubName} 요약 정보`,
-              files: [new File([blob], `계모임-요약-${new Date().toISOString().split('T')[0]}.png`, { type: 'image/png' })]
-            }).catch(() => {
-              alert('스크린샷이 저장되었습니다. 카카오톡에서 공유해주세요.')
-            })
-          } else {
-            alert('스크린샷이 저장되었습니다. 카카오톡에서 공유해주세요.')
+          // Web Share API로 바로 공유 시도 (모바일에서 카카오톡 등으로 공유 가능)
+          if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+            try {
+              await navigator.share({
+                title: `${settings.clubName || '계모임'} 요약`,
+                text: `${settings.clubName || '계모임'} 요약 정보입니다.`,
+                files: [file]
+              })
+              // 공유 성공
+              return
+            } catch (shareError) {
+              // 사용자가 공유를 취소했거나 실패한 경우
+              if (shareError.name !== 'AbortError') {
+                console.error('공유 실패:', shareError)
+              }
+            }
+          }
+          
+          // Web Share API가 지원되지 않거나 실패한 경우
+          // 클립보드에 복사 시도
+          try {
+            await navigator.clipboard.write([
+              new ClipboardItem({
+                'image/png': blob
+              })
+            ])
+            alert('이미지가 클립보드에 복사되었습니다.\n카카오톡에서 붙여넣기(Ctrl+V 또는 길게 누르기)로 공유하세요.')
+          } catch (clipboardError) {
+            // 클립보드 복사 실패 시 다운로드
+            const url = URL.createObjectURL(blob)
+            const link = document.createElement('a')
+            link.href = url
+            link.download = fileName
+            document.body.appendChild(link)
+            link.click()
+            document.body.removeChild(link)
+            URL.revokeObjectURL(url)
+            alert('이미지가 다운로드되었습니다.\n다운로드한 이미지를 카카오톡에서 공유하세요.')
           }
         }
       }, 'image/png')
@@ -77,7 +99,7 @@ export default function Summary() {
         onClick={handleScreenshot}
         disabled={isCapturing}
       >
-        {isCapturing ? '생성 중...' : '📸 스크린샷 저장 (카카오톡 공유)'}
+        {isCapturing ? '생성 중...' : '📸 카카오톡으로 공유'}
       </button>
 
       <div id="summary-content" className="summary-content">
