@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>계모임 관리</title>
+    <script>
+      // GitHub Pages에서 새로고침 시 404 에러 방지
+      // 404.html을 index.html의 복사본으로 사용하여 SPA 라우팅 지원
+      // 이 파일은 빌드 시 index.html로 복사됩니다
+      const path = window.location.pathname;
+      const base = '/meeting89/';
+      const redirectPath = base + 'index.html' + window.location.search + window.location.hash;
+      window.location.replace(redirectPath);
+    </script>
+  </head>
+  <body>
+    <p>리다이렉트 중...</p>
+  </body>
+</html>
+

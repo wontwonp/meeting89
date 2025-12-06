@@ -15,7 +15,7 @@ import './App.css'
 function App() {
   return (
     <DataProvider>
-      <Router>
+      <Router basename="/meeting89">
         <div className="app">
           <Routes>
             <Route path="/" element={<Home />} />
