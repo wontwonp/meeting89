@@ -10,13 +10,47 @@ export default function Summary() {
   const [showKakaoModal, setShowKakaoModal] = useState(false)
   const [capturedImage, setCapturedImage] = useState(null)
 
-  const totalDeposits = deposits.reduce((sum, d) => sum + (parseFloat(d.amount) || 0), 0)
-  const totalExpenses = expenses.reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0)
-  const carryOverAmount = getCurrentYearCarryOver()
-  const balance = carryOverAmount + totalDeposits - totalExpenses
+  // 현재 연도 계산
+  const currentYear = new Date().getFullYear()
+  const yearStart = `${currentYear}-01-01`
+  const yearEnd = `${currentYear}-12-31`
 
+  // 현재 연도 필터 함수
+  const isCurrentYear = (date) => {
+    if (!date) return false
+    return date >= yearStart && date <= yearEnd
+  }
+
+  // 현재 연도의 은행이자 입금만 필터링 (멤버 입금 제외)
+  const currentYearInterestDeposits = deposits.filter(d => {
+    const depositType = d.depositType || (d.memberId ? 'member' : 'interest')
+    return depositType === 'interest' && isCurrentYear(d.date)
+  })
+
+  // 현재 연도의 지출만 필터링
+  const currentYearExpenses = expenses.filter(e => isCurrentYear(e.date))
+
+  // 현재 연도의 멤버 입금만 필터링
+  const currentYearMemberDeposits = deposits.filter(d => {
+    const depositType = d.depositType || (d.memberId ? 'member' : 'interest')
+    return depositType === 'member' && isCurrentYear(d.date)
+  })
+
+  // 현재 연도 은행이자 총액
+  const totalInterestDeposits = currentYearInterestDeposits.reduce((sum, d) => sum + (parseFloat(d.amount) || 0), 0)
+  
+  // 현재 연도 멤버 입금 총액
+  const totalMemberDeposits = currentYearMemberDeposits.reduce((sum, d) => sum + (parseFloat(d.amount) || 0), 0)
+  
+  // 현재 연도 지출 총액
+  const totalExpenses = currentYearExpenses.reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0)
+  
+  const carryOverAmount = getCurrentYearCarryOver()
+  const balance = carryOverAmount + totalMemberDeposits + totalInterestDeposits - totalExpenses
+
+  // 멤버별 현재 연도 입금 현황
   const memberStats = members.map(member => {
-    const memberDeposits = deposits
+    const memberDeposits = currentYearMemberDeposits
       .filter(d => d.memberId === member.id)
       .reduce((sum, d) => sum + (parseFloat(d.amount) || 0), 0)
     return {
@@ -100,6 +134,7 @@ export default function Summary() {
       <div id="summary-content" className="summary-content">
         <div className="summary-header">
           <h2>{settings.clubName || '계모임'}</h2>
+          <p className="summary-date">{currentYear}년 1월 1일 ~ 12월 31일 기준</p>
           <p className="summary-date">생성일: {new Date().toLocaleDateString('ko-KR')}</p>
         </div>
 
@@ -112,17 +147,17 @@ export default function Summary() {
             )}
           </div>
           <div className="summary-stat-card">
-            <div className="stat-label">총 입금</div>
-            <div className="stat-value-large positive">{totalDeposits.toLocaleString()}원</div>
+            <div className="stat-label">{currentYear}년 은행이자</div>
+            <div className="stat-value-large positive">{totalInterestDeposits.toLocaleString()}원</div>
           </div>
           <div className="summary-stat-card">
-            <div className="stat-label">총 지출</div>
+            <div className="stat-label">{currentYear}년 총 지출</div>
             <div className="stat-value-large negative">{totalExpenses.toLocaleString()}원</div>
           </div>
         </div>
 
         <div className="summary-section">
-          <h3 className="section-title">멤버별 입금 현황</h3>
+          <h3 className="section-title">{currentYear}년 멤버별 입금 현황</h3>
           {memberStats.length > 0 ? (
             <div className="member-stats-list">
               {memberStats.map(member => (
@@ -140,41 +175,34 @@ export default function Summary() {
         </div>
 
         <div className="summary-section">
-          <h3 className="section-title">최근 입금 내역 (최대 10개)</h3>
-          {deposits.length > 0 ? (
+          <h3 className="section-title">{currentYear}년 은행이자 입금 내역</h3>
+          {currentYearInterestDeposits.length > 0 ? (
             <div className="recent-list">
-              {[...deposits]
+              {[...currentYearInterestDeposits]
                 .sort((a, b) => new Date(b.date) - new Date(a.date))
-                .slice(0, 10)
-                .map(deposit => {
-                  const member = members.find(m => m.id === deposit.memberId)
-                  const depositType = deposit.depositType || (deposit.memberId ? 'member' : 'interest')
-                  const displayName = depositType === 'interest' ? '은행이자' : (member?.name || '알 수 없음')
-                  return (
-                    <div key={deposit.id} className="recent-list-item">
-                      <div>
-                        <div className="recent-item-name">{displayName}</div>
-                        <div className="recent-item-date">{deposit.date}</div>
-                      </div>
-                      <div className="recent-item-amount positive">
-                        +{parseFloat(deposit.amount || 0).toLocaleString()}원
-                      </div>
+                .map(deposit => (
+                  <div key={deposit.id} className="recent-list-item">
+                    <div>
+                      <div className="recent-item-name">은행이자</div>
+                      <div className="recent-item-date">{deposit.date}</div>
                     </div>
-                  )
-                })}
+                    <div className="recent-item-amount positive">
+                      +{parseFloat(deposit.amount || 0).toLocaleString()}원
+                    </div>
+                  </div>
+                ))}
             </div>
           ) : (
-            <p className="empty-text">입금 내역이 없습니다</p>
+            <p className="empty-text">은행이자 입금 내역이 없습니다</p>
           )}
         </div>
 
         <div className="summary-section">
-          <h3 className="section-title">최근 지출 내역 (최대 10개)</h3>
-          {expenses.length > 0 ? (
+          <h3 className="section-title">{currentYear}년 지출 내역</h3>
+          {currentYearExpenses.length > 0 ? (
             <div className="recent-list">
-              {[...expenses]
+              {[...currentYearExpenses]
                 .sort((a, b) => new Date(b.date) - new Date(a.date))
-                .slice(0, 10)
                 .map(expense => (
                   <div key={expense.id} className="recent-list-item">
                     <div>
