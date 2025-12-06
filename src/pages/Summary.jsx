@@ -102,8 +102,6 @@ export default function Summary() {
           if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
             try {
               await navigator.share({
-                title: `${settings.clubName || '계모임'} 요약`,
-                text: `${settings.clubName || '계모임'} 요약 정보입니다.`,
                 files: [file]
               })
               setIsCapturing(false)

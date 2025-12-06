@@ -19,8 +19,6 @@ export default function KakaoShareModal({ image, clubName, onClose }) {
     try {
       if (navigator.share && navigator.canShare && navigator.canShare({ files: [image.file] })) {
         await navigator.share({
-          title: `${clubName} 요약`,
-          text: `${clubName} 요약 정보입니다.`,
           files: [image.file]
         })
         onClose()
