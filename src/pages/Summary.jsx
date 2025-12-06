@@ -158,7 +158,9 @@ export default function Summary() {
         <div className="summary-header">
           <h2>{settings.clubName || '계모임'}</h2>
           <p className="summary-date">{currentYear}년 1월 1일 ~ 12월 31일 기준</p>
-          <p className="summary-date">생성일: {new Date().toLocaleDateString('ko-KR')}</p>
+          {settings.creationDate && (
+            <p className="summary-date">생성일: {new Date(settings.creationDate).toLocaleDateString('ko-KR')}</p>
+          )}
         </div>
 
         <div className="summary-stats">
