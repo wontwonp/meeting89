@@ -102,26 +102,40 @@ export default function DepositModal({ deposit, onClose }) {
           )}
           <div className="input-group">
             <label>금액 *</label>
-            <div className="amount-buttons">
-              <button
-                type="button"
-                className={`amount-btn ${formData.amount === '10000' ? 'active' : ''}`}
-                onClick={() => setFormData({ ...formData, amount: '10000' })}
-              >
-                1만원
-              </button>
-              <button
-                type="button"
-                className={`amount-btn ${formData.amount === '50000' ? 'active' : ''}`}
-                onClick={() => setFormData({ ...formData, amount: '50000' })}
-              >
-                5만원
-              </button>
-            </div>
-            {formData.amount && (
-              <div className="selected-amount">
-                선택된 금액: {parseInt(formData.amount).toLocaleString()}원
-              </div>
+            {formData.depositType === 'member' ? (
+              <>
+                <div className="amount-buttons">
+                  <button
+                    type="button"
+                    className={`amount-btn ${formData.amount === '10000' ? 'active' : ''}`}
+                    onClick={() => setFormData({ ...formData, amount: '10000' })}
+                  >
+                    1만원
+                  </button>
+                  <button
+                    type="button"
+                    className={`amount-btn ${formData.amount === '50000' ? 'active' : ''}`}
+                    onClick={() => setFormData({ ...formData, amount: '50000' })}
+                  >
+                    5만원
+                  </button>
+                </div>
+                {formData.amount && (
+                  <div className="selected-amount">
+                    선택된 금액: {parseInt(formData.amount).toLocaleString()}원
+                  </div>
+                )}
+              </>
+            ) : (
+              <input
+                type="number"
+                value={formData.amount}
+                onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                placeholder="금액을 입력하세요"
+                min="0"
+                step="1000"
+                required
+              />
             )}
           </div>
           <div className="input-group">

@@ -13,7 +13,8 @@ const defaultData = {
   events: [], // 경조사 지급 내역 [{ eventType, memberId, date, amount }]
   settings: {
     clubName: '계모임',
-    currency: '원'
+    currency: '원',
+    creationDate: '' // 계모임 생성일
   }
 }
 

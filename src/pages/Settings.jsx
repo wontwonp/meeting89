@@ -5,6 +5,7 @@ import './Settings.css'
 export default function Settings() {
   const { settings, updateSettings, carryOverAmounts, setCarryOverAmount, deposits, expenses, getCurrentYearCarryOver, exportData, importData, resetData } = useData()
   const [clubName, setClubName] = useState(settings.clubName || '')
+  const [creationDate, setCreationDate] = useState(settings.creationDate || '')
   const currentYear = new Date().getFullYear().toString()
   const prevYear = (parseInt(currentYear) - 1).toString()
   const [carryOverAmount, setCarryOverAmountLocal] = useState(carryOverAmounts[currentYear] || '')
@@ -26,7 +27,9 @@ export default function Settings() {
 
   useEffect(() => {
     setCarryOverAmountLocal(carryOverAmounts[currentYear] || '')
-  }, [carryOverAmounts, currentYear])
+    setClubName(settings.clubName || '')
+    setCreationDate(settings.creationDate || '')
+  }, [carryOverAmounts, currentYear, settings])
 
   const handleSetPrevYearBalance = () => {
     if (prevYearBalance > 0) {
@@ -35,7 +38,7 @@ export default function Settings() {
   }
 
   const handleSaveSettings = () => {
-    updateSettings({ clubName })
+    updateSettings({ clubName, creationDate })
     if (carryOverAmount) {
       setCarryOverAmount(currentYear, carryOverAmount)
     }
@@ -99,6 +102,15 @@ export default function Settings() {
               value={clubName}
               onChange={(e) => setClubName(e.target.value)}
               placeholder="계모임 이름을 입력하세요"
+            />
+          </div>
+          <div className="input-group">
+            <label>계모임 생성일</label>
+            <input
+              type="date"
+              value={creationDate}
+              onChange={(e) => setCreationDate(e.target.value)}
+              placeholder="계모임 생성일을 선택하세요"
             />
           </div>
           <div className="input-group">
