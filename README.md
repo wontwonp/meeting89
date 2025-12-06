@@ -57,17 +57,22 @@ npm run preview
 
 ## GitHub Pages 배포
 
-이 프로젝트를 GitHub Pages에 배포하려면:
+이 프로젝트는 GitHub Pages를 통해 자동으로 배포됩니다.
 
-1. `vite.config.js`에 `base` 경로를 추가합니다:
-```javascript
-export default defineConfig({
-  base: '/repository-name/', // GitHub 저장소 이름으로 변경
-  // ...
-})
-```
+### 웹에서 접속하기
 
-2. GitHub Actions를 사용하여 자동 배포하거나, 수동으로 빌드 후 `dist` 폴더를 GitHub Pages에 업로드합니다.
+1. GitHub 저장소의 **Settings** → **Pages**로 이동합니다.
+2. **Source**에서 **GitHub Actions**를 선택합니다.
+3. 코드를 `main` 브랜치에 푸시하면 자동으로 배포됩니다.
+4. 배포 완료 후 다음 주소로 접속할 수 있습니다:
+   ```
+   https://wontwonp.github.io/meeting89/
+   ```
+
+### 배포 상태 확인
+
+- GitHub 저장소의 **Actions** 탭에서 배포 상태를 확인할 수 있습니다.
+- 배포가 완료되면 위의 주소로 접속하여 웹 애플리케이션을 사용할 수 있습니다.
 
 ## 라이선스
 
